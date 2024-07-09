@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <math.h>
 #include <omp.h>
 #include <mpi.h>
@@ -24,7 +25,7 @@
  * will be 1.0. The absence of edge is represented with value 0.0.
  * Redundant edges are still represented with value 1.0.
  */
-double adjacency_matrix[GRAPH_ORDER][GRAPH_ORDER];
+char adjacency_matrix[GRAPH_ORDER][GRAPH_ORDER];
 double max_diff = 0.0;
 double min_diff = 1.0;
 double total_diff = 0.0;
@@ -33,7 +34,7 @@ void initialize_graph(void)
 {
   for (int i = 0; i < GRAPH_ORDER; i++) {
     for (int j = 0; j < GRAPH_ORDER; j++) {
-      adjacency_matrix[i][j] = 0.0;
+      adjacency_matrix[i][j] = 0;
     }
   }
 }
@@ -71,13 +72,11 @@ void calculate_pagerank(double pagerank[]) {
 
     for (int i = 0; i < GRAPH_ORDER; i++) {
       for (int j = 0; j < GRAPH_ORDER; j++) {
-        if (adjacency_matrix[j][i] == 1.0) {
+        if (adjacency_matrix[j][i] == 1) {
           int outdegree = 0;
 
           for (int k = 0; k < GRAPH_ORDER; k++) {
-            if (adjacency_matrix[j][k] == 1.0) {
-              outdegree++;
-            }
+            outdegree += adjacency_matrix[j][k];
           }
           new_pagerank[i] += pagerank[j] / (double)outdegree;
         }
@@ -179,7 +178,7 @@ int main(int argc, char *argv[])
   // Get the time at the very start.
   double start = omp_get_wtime();
 
-  generate_nice_graph();
+  generate_sneaky_graph();
 
   /// The array in which each vertex pagerank is stored.
   double pagerank[GRAPH_ORDER];
