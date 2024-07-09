@@ -10,6 +10,8 @@
 # The name of the output file
 #SBATCH -o output.txt
 
+#SBATCH -e error.txt
+
 # The partition to use, shared CPU nodes in this case
 #SBATCH -p RM-shared
 
